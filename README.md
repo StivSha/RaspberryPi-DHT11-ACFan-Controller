@@ -1,1 +1,1 @@
-# RaspberryPi-DHT11-Fan-Telegram
+# RaspberryPi-DHT11-ACFan-Controller

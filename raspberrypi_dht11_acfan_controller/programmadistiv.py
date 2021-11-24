@@ -1,5 +1,5 @@
 import key as keys
-import Responses as R
+import responses as R
 import logging
 import logging.config
 from telegram.ext import updater

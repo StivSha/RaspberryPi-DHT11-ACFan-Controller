@@ -1,5 +1,0 @@
-CookieCutter sw for directory -> template
-	Docs
-	Code
-	Test -> add here tests
-Python multithread codes -> consumare la coda e scriverci

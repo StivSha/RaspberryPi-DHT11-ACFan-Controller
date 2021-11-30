@@ -1,26 +1,32 @@
-from paho import mqtt
-import paho.mqtt.publish as publish
+import json
 import logging
 import logging.config
-import json
+import paho.mqtt.publish as publish
 
-logging.config.fileConfig('logging.conf')
+
+# Setting right logger
+
 logger = logging.getLogger('rpi_publisher')
 
 
-def mqtt_publisher(temp, hum):
+# Publishing and Logging MQTT
+# Database used is InfluxDB: timestamp isn't needed
+# Publishing format is in JSON 
 
-    # Publishing and Logging MQTT
-    # Database used is InfluxDB: timestamp isn't needed
+def mqtt_publisher(temp, hum):
+    
     try:
         data_set = {"temperature": temp, "humidity": hum}
         json_dump = json.dumps(data_set)
         publish.single("TempHumSens", json_dump, qos=0,
                        retain=False, hostname="localhost", port=1883)
-        #publish.single("TempHumSens", str(temp) + " " + str(hum), qos=0, retain=False, hostname="localhost", port=1883)
+
         logger.info(f"Correct Publishing")
+
     except Exception as e:
         logger.error(f"Error publishing MQTT messages to broker")
         logger.error(e)
 
+
+# Here for testing purpose
 # mqtt_publisher(1,2)

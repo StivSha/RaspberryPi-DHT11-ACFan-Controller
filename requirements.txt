@@ -1,0 +1,4 @@
+Adafruit_DHT==1.4.0
+paho_mqtt==1.6.1
+python_telegram_bot==13.8.1
+telegram==0.0.1

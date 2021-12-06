@@ -1,5 +1,6 @@
 """Main module."""
 import os
+print(os.getpid())
 import time
 import queue
 import signal
@@ -13,12 +14,13 @@ from os import kill, path
 from threading import Thread
 
 # Import our packets
-
+print("importing your libraries")
 from datetime import date, datetime, timedelta
 from bot import run_bot
 from fan import set_status
 from relay.relay_controller import relay_clear
 from outputs.rpi_publisher import mqtt_publisher
+print("done!")
 
 # Logger setup
 
@@ -26,6 +28,8 @@ logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('MAIN')
 
 # DHT11 settings -> should put these in .env file
+
+
 
 sensor = 11
 gpio = 4
@@ -37,10 +41,13 @@ gpio = 4
 # calls outputs.rpi_publisher.mqtt_publisher to send temp and humidity via MQTT to the database
 # it has a default shutdown procedure for a clear exit
 
+
 def DHT11_Fan_caller(c, stop_event):
     item = [False, datetime.fromtimestamp(0)]
     c.put(item)
     counter = 0
+
+    print("DHT11 ready")
     while not stop_event.wait(1):
         actual = c.get()
 
@@ -49,7 +56,7 @@ def DHT11_Fan_caller(c, stop_event):
 
             humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
 
-            if temperature > 10:
+            if temperature > 25:
                 c.put(set_status(status=True, actual=actual))
                 logger.debug("Status ON")
             else:
@@ -68,9 +75,10 @@ def DHT11_Fan_caller(c, stop_event):
             logger.critical("Failed to read DHT11")
 
             if counter > 10:
-                logger.critical("Failed DHT11 more than 10 times in a row - Shutting DOWN!")
+                logger.critical(
+                    "Failed DHT11 more than 10 times in a row - Shutting DOWN!")
                 os.kill(os.getpid(), signal.SIGTERM)
-            
+
             continue
         except Error as e:
             # Manage "not connected error"
@@ -81,20 +89,21 @@ def DHT11_Fan_caller(c, stop_event):
             logger.critical("Failed DHT11 - Shutting DOWN!")
             os.kill(os.getpid(), signal.SIGTERM)
 
+        print("autostuff sleeping for 20 secs")
         logger.debug("Sleeping for 2 seconds")
-        time.sleep(2)
-    
+        time.sleep(180)
+
     # Called when the thread is killed
     # Clears Fifo Queue
-
-    logging.info("Shutting Down DHT11_Fan_caller process")
+    print("QUI")
+    logger.info("Shutting Down DHT11_Fan_caller process")
     with c.mutex:
-        logging.debug("Clearing Fifo Queue")
+        logger.debug("Clearing Fifo Queue")
         c.queue.clear()
 
-    #Clears Raspberry I/O
+    # Clears Raspberry I/O
 
-    logging.debug("Calling relay_clear I/O")
+    logger.debug("Calling relay_clear I/O")
     relay_clear()
 
 
@@ -102,19 +111,19 @@ def DHT11_Fan_caller(c, stop_event):
 
 def start():
     # SIGUSR1 handler. Used to gently kill thread 1 when SIGINT or SIGTERM are called
-    # SIGUSR1 is sent from bot 
-
+    # SIGUSR1 is sent from bot
+    print("starting")
     def sigusr1_handler(*args):
-        logging.debug(
+        logger.debug(
             "Signal SIGUSR1 Received - Killing DHT11_Fan_caller process ")
-        
+        print("signal received")
         pill2kill.set()
 
         # wait for t1 to end
         t1.join()
-        
+
         # kill the rest of the program
-        logging.debug("Killing main module")
+        logger.debug("Killing main module")
         kill(os.getpid(), signal.SIGTERM)
 
     signal.signal(signal.SIGUSR1, sigusr1_handler)
@@ -126,5 +135,5 @@ def start():
     t1.start()
     run_bot(q)
 
-
 start()
+#print("porcoddio")

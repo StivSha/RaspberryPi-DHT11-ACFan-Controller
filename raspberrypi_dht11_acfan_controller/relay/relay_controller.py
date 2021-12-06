@@ -22,6 +22,7 @@ GPIO.setup(FAN_PIN, GPIO.OUT)
 
 def relay_on():
     logger.info("FAN ON")
+    print("relay ON")
     GPIO.output(FAN_PIN, GPIO.HIGH)
 
 
@@ -29,6 +30,7 @@ def relay_on():
 
 def relay_off():
     logger.info("FAN OFF")
+    print("relay OFF")
     GPIO.output(FAN_PIN, GPIO.LOW)
 
 

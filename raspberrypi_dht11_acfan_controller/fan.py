@@ -2,7 +2,6 @@ import os
 import signal
 import logging
 from datetime import date, datetime, timedelta
-
 from relay.relay_controller import relay_off, relay_on
 
 

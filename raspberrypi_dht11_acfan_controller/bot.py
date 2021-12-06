@@ -58,18 +58,11 @@ def on_command(update, context):
 
     awake = int(user_says)
 
-    # Should be useless
-    #dato[1] = datetime.fromisoformat(dato[1])
-
-
     if dato[0] == True:
         # If it's ON -> update off time
         logger.debug("Updating OFF Time")
 
         dato[1] = dato[1] + timedelta(0, awake)
-#        q1.put(dato)
-        
-        print(dato)
 
         update.message.reply_text("ON + Time added")
     else:
@@ -79,11 +72,6 @@ def on_command(update, context):
         relay_on()
 
         dato[1] = datetime.now() + timedelta(0, awake)
-        
-        print(dato)
-
-#        q1.put(dato)
-
         update.message.reply_text("Turned ON")
 
     q1.put(dato)
@@ -99,21 +87,14 @@ def off_command(update, context):
     if dato[0] == True:
         # If it's ON -> override
         logger.debug("Overriding OFF")
-
         dato[1] = datetime.fromtimestamp(0)
-#        q1.put(dato)
         dato[0] = False
-        print(dato)
 
-        relay_off()
-        
+        relay_off()   
         update.message.reply_text("OFF")
     else:
         # It's already OFF, do nothing
         logger.debug("Doing nothing -> Fan is already off")
-
-        print(dato)
-
         update.message.reply_text("Is Already OFF")
 
     q1.put(dato)
@@ -160,7 +141,7 @@ def run_bot(q):
     dp.add_error_handler(error)
 
     updater.start_polling(0)  # checking user inputs(time)
-    print("bot ready")
+    # print("bot ready")
     # Idling BOT
     # used for gentle shutdown procedure
     # updater.idle()
@@ -169,5 +150,5 @@ def run_bot(q):
     logger.info("Shutting Down Initialized")
     logger.debug("Sending Signal SIGUSR1")
     os.kill(os.getpid(), signal.SIGUSR1)
-    print("BOT KILLED")
+    # print("BOT KILLED")
 

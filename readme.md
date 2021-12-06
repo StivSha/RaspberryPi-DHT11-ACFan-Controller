@@ -1,5 +1,5 @@
 # About this project
-RaspberryPi-DHT11-ACFan-Controller is a simple automatic fan controller for RasperryPi's GPiO library. It uses a DHT11 to get temperature and humidity and sends this data with MQTT. The relays is automatically set to True when temperature > something static, but it can be overrided by the Telegram bot.
+RaspberryPi-DHT11-ACFan-Controller is a simple automatic fan controller for RasperryPi's GPiO library. It uses a DHT11 to get temperature and humidity and sends this data with MQTT to a database. The relay is automatically set to True when temperature > something static, but it can be overrided by the Telegram bot.
 
 ### Requirements
 Simply run

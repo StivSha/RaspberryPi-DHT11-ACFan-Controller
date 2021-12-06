@@ -1,6 +1,6 @@
 """Main module."""
 import os
-print(os.getpid())
+# print(os.getpid())
 import time
 import queue
 import signal
@@ -14,13 +14,13 @@ from os import kill, path
 from threading import Thread
 
 # Import our packets
-print("importing your libraries")
+# print("importing your libraries")
 from datetime import date, datetime, timedelta
 from bot import run_bot
 from fan import set_status
 from relay.relay_controller import relay_clear
 from outputs.rpi_publisher import mqtt_publisher
-print("done!")
+# print("done!")
 
 # Logger setup
 
@@ -47,7 +47,7 @@ def DHT11_Fan_caller(c, stop_event):
     c.put(item)
     counter = 0
 
-    print("DHT11 ready")
+    # print("DHT11 ready")
     while not stop_event.wait(1):
         actual = c.get()
 
@@ -74,7 +74,7 @@ def DHT11_Fan_caller(c, stop_event):
             logger.critical(e)
             logger.critical("Failed to read DHT11")
 
-            if counter > 10:
+            if counter > 25:
                 logger.critical(
                     "Failed DHT11 more than 10 times in a row - Shutting DOWN!")
                 os.kill(os.getpid(), signal.SIGTERM)
@@ -89,13 +89,12 @@ def DHT11_Fan_caller(c, stop_event):
             logger.critical("Failed DHT11 - Shutting DOWN!")
             os.kill(os.getpid(), signal.SIGTERM)
 
-        print("autostuff sleeping for 20 secs")
+        # print("autostuff sleeping for 20 secs")
         logger.debug("Sleeping for 2 seconds")
         time.sleep(180)
 
     # Called when the thread is killed
     # Clears Fifo Queue
-    print("QUI")
     logger.info("Shutting Down DHT11_Fan_caller process")
     with c.mutex:
         logger.debug("Clearing Fifo Queue")
@@ -112,11 +111,11 @@ def DHT11_Fan_caller(c, stop_event):
 def start():
     # SIGUSR1 handler. Used to gently kill thread 1 when SIGINT or SIGTERM are called
     # SIGUSR1 is sent from bot
-    print("starting")
+    # print("starting")
     def sigusr1_handler(*args):
         logger.debug(
             "Signal SIGUSR1 Received - Killing DHT11_Fan_caller process ")
-        print("signal received")
+        # print("signal received")
         pill2kill.set()
 
         # wait for t1 to end
@@ -136,4 +135,3 @@ def start():
     run_bot(q)
 
 start()
-#print("porcoddio")

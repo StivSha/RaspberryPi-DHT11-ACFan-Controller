@@ -14,7 +14,6 @@ logger = logging.getLogger('fan_auto')
 '''
 
 
-
 def turn_on(awake_time):
     logger.debug("Turning ON fan")
     relay_on()
@@ -37,15 +36,15 @@ def set_status(status, actual, awake_time=8):
         logger.critical("actual[0] not Boolean")
         logger.critical("Exiting")
         logger.debug("Calling SIGTERM")
-        
+
         os.kill(os.getpid(), signal.SIGTERM)
 
-    # if shutdown time has elapsed and fan is still ON 
+    # if shutdown time has elapsed and fan is still ON
 
     if (actual[1] < datetime.now()) & (actual[0] == True):
         # TURN OFF
         logger.info("time elapsed, turning off")
-        
+
         actual[1] = turn_off()
         status = False
 
@@ -55,11 +54,8 @@ def set_status(status, actual, awake_time=8):
 
         actual[1] = turn_on(awake_time)
         status = True
-        #print("status=%s, data=%s" %(status, actual[1]))
-        #scrittura(stato=status, data=actual[1])
-
     # returning updated status and off time
-    
+
     return [status, actual[1]]
 
 

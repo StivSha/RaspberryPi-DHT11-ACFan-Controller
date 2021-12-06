@@ -1,6 +1,3 @@
-# compressed zip for server injection
-# raspberrypi_dht11_acfan_controller/compresso.zip
-
 # logs
 raspberrypi_dht11_acfan_controller/*.log
 
@@ -10,11 +7,8 @@ raspberrypi_dht11_acfan_controller/key.py
 # python "cache"
 raspberrypi_dht11_acfan_controller/*.pyc
 
-# TODO notes
-TODO
 
 tests/
-
 
 
 # Byte-compiled / optimized / DLL files

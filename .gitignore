@@ -2,7 +2,7 @@
 raspberrypi_dht11_acfan_controller/*.log
 
 # Telegram http key
-raspberrypi_dht11_acfan_controller/key.py
+# raspberrypi_dht11_acfan_controller/key.py
 
 # python "cache"
 raspberrypi_dht11_acfan_controller/*.pyc

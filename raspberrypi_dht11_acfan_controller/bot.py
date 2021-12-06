@@ -2,12 +2,9 @@ import os
 import signal
 import remote.key as keys
 import logging
-import sys
 
-from os import path
-from telegram.ext import updater
-from telegram.ext import *
-from datetime import date, datetime, timedelta
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from datetime import datetime, timedelta
 
 
 # Import our packet
@@ -78,10 +75,11 @@ def on_command(update, context):
 
 # ""OFF OVERRIDE"" Command
 
+
 def off_command(update, context):
     logger.info("Called OFF")
 
-    # Getting IRT data from Fifo Queue 
+    # Getting IRT data from Fifo Queue
     dato = q1.get()
     # update.message.reply_text("%s" %str(dato))
     if dato[0] == True:
@@ -90,7 +88,7 @@ def off_command(update, context):
         dato[1] = datetime.fromtimestamp(0)
         dato[0] = False
 
-        relay_off()   
+        relay_off()
         update.message.reply_text("OFF")
     else:
         # It's already OFF, do nothing
@@ -101,9 +99,10 @@ def off_command(update, context):
 
 # ""STATUS"" Command
 
+
 def status_command(update, context):
     logger.info("Called Status")
-    
+
     dato = q1.get()
     q1.put(dato)
     update.message.reply_text(str(dato[0]) + str(dato[1]))
@@ -151,4 +150,3 @@ def run_bot(q):
     logger.debug("Sending Signal SIGUSR1")
     os.kill(os.getpid(), signal.SIGUSR1)
     # print("BOT KILLED")
-

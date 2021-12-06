@@ -67,7 +67,7 @@ def on_command(update, context):
         logger.debug("Turning ON Fan")
 
         relay_on()
-
+        dato[0] = True
         dato[1] = datetime.now() + timedelta(0, awake)
         update.message.reply_text("Turned ON")
 

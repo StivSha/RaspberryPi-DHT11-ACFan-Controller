@@ -15,6 +15,7 @@ gpio = 4
 
 logger = logging.getLogger('fan_caller')
 
+
 def DHT11_Fan_caller(c, stop_event):
     item = [False, datetime.fromtimestamp(0)]
     c.put(item)
@@ -41,6 +42,7 @@ def DHT11_Fan_caller(c, stop_event):
             logger.debug("Publishing MQTT")
             mqtt_publisher(temp=temperature, hum=humidity)
             counter = 0
+
         except RuntimeError as e:
             # As DHT11 sensors are not reliable, this is needed. If data is not read for more than 10 times in a row, program gets shut down
             counter = counter + 1
@@ -53,6 +55,7 @@ def DHT11_Fan_caller(c, stop_event):
                 os.kill(os.getpid(), signal.SIGTERM)
 
             continue
+
         except Error as e:
             # Manage "not connected error"
             # Killing for safety: board could be shorted

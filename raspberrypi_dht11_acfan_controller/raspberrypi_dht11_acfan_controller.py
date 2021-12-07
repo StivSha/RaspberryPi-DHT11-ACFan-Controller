@@ -23,14 +23,7 @@ from fan_caller import DHT11_Fan_caller
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('MAIN')
 
-# DHT11 settings -> should put these in .env file
 
-# Thread 1
-# get temp and hum from DHT11
-# calls fan.set_status -> turns on the fan if temperature is over a range
-# FAN IS TURNED OFF after some time -> it can be manually turned off with the override - could be cool to implement an "OFF for X minutes"
-# calls outputs.rpi_publisher.mqtt_publisher to send temp and humidity via MQTT to the database
-# it has a default shutdown procedure for a clear exit
 
 # ""MAIN""
 

@@ -53,4 +53,6 @@ def start():
     t1.start()
     run_bot(q)
 
-start()
+if __name__ == '__main__':
+    logger.debug("__name__ == __main__ STARTING program")
+    start()

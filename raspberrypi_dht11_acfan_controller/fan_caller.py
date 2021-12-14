@@ -34,22 +34,24 @@ def DHT11_Fan_caller(c, stop_event):
         actual = c.get()
 
         try:
-            # Reads Temperature and Humidity
 
             humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
+            
+            if (temperature is float) and (humidity is float):
+                # Reads Temperature and Humidity
 
-            if temperature > 25:
-                c.put(set_status(status=True, actual=actual))
-                logger.debug("Status ON")
-            else:
-                # used only to call set_status and pass actual data
+                if temperature > 25:
+                    c.put(set_status(status=True, actual=actual))
+                    logger.debug("Status ON")
+                else:
+                    # used only to call set_status and pass actual data
 
-                c.put(set_status(status=False, actual=actual))
-                logger.debug("Status OFF")
+                    c.put(set_status(status=False, actual=actual))
+                    logger.debug("Status OFF")
 
-            logger.debug("Publishing MQTT")
-            mqtt_publisher(temp=temperature, hum=humidity)
-            counter = 0
+                logger.debug("Publishing MQTT")
+                mqtt_publisher(temp=temperature, hum=humidity)
+                counter = 0
 
         except RuntimeError as e:
             # As DHT11 sensors are not reliable, this is needed. If data is not read for more than 10 times in a row, program gets shut down

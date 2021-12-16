@@ -7,13 +7,14 @@ from fan import set_status
 from relay.relay_controller import relay_clear
 from outputs.rpi_publisher import mqtt_publisher
 import os
-#import queue
+
+# import queue
 import signal
 
 sensor = 11
 gpio = 4
 
-logger = logging.getLogger('fan_caller')
+logger = logging.getLogger("fan_caller")
 
 # DHT11 settings -> should put these in .env file
 
@@ -24,6 +25,7 @@ logger = logging.getLogger('fan_caller')
 # calls outputs.rpi_publisher.mqtt_publisher to send temp and humidity via MQTT to the database
 # it has a default shutdown procedure for a clear exit
 
+
 def DHT11_Fan_caller(c, stop_event):
     item = [False, datetime.fromtimestamp(0)]
     c.put(item)
@@ -31,12 +33,17 @@ def DHT11_Fan_caller(c, stop_event):
 
     # print("DHT11 ready")
     while not stop_event.wait(1):
+        logger.debug("Wait elapsed")
         actual = c.get()
 
-        try:
+        with c.mutex:
+            logger.debug("queue cleared")
+            c.queue.clear()
 
+        try:
+            logger.debug("Reading DHT11")
             humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
-            
+
             if (temperature is float) and (humidity is float):
                 # Reads Temperature and Humidity
 
@@ -52,17 +59,13 @@ def DHT11_Fan_caller(c, stop_event):
                 logger.debug("Publishing MQTT")
                 mqtt_publisher(temp=temperature, hum=humidity)
                 counter = 0
+            else:
+                logger.debug("Unreadable DHT11")
 
         except RuntimeError as e:
             # As DHT11 sensors are not reliable, this is needed. If data is not read for more than 10 times in a row, program gets shut down
-            counter = counter + 1
             logger.critical(e)
             logger.critical("Failed to read DHT11")
-
-            if counter > 25:
-                logger.critical(
-                    "Failed DHT11 more than 10 times in a row - Shutting DOWN!")
-                os.kill(os.getpid(), signal.SIGTERM)
 
             continue
 

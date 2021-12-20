@@ -1,6 +1,5 @@
 """Main module."""
 import os
-# print(os.getpid())
 import queue
 import signal
 import threading
@@ -10,19 +9,18 @@ import logging.config
 from os import kill
 from threading import Thread
 
+
 # Import our packets
 # print("importing your libraries")
-
 from bot import run_bot
 from fan_caller import DHT11_Fan_caller
-
 # print("done!")
+
 
 # Logger setup
 
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('MAIN')
-
 
 
 # ""MAIN""

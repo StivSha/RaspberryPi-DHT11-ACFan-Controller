@@ -140,10 +140,6 @@ def run_bot(q):
     dp.add_error_handler(error)
 
     updater.start_polling(0)  # checking user inputs(time)
-    # print("bot ready")
-    # Idling BOT
-    # used for gentle shutdown procedure
-    # updater.idle()
 
     updater.idle(stop_signals=(signal.SIGINT, signal.SIGTERM))
     logger.info("Shutting Down Initialized")

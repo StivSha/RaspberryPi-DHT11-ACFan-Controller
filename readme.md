@@ -29,6 +29,7 @@ paste and add your key:
 save with **CTRL+X**.
 
 ## Install and test MQTT
+### Install
 * Install Mosquitto ``` sudo apt install -y mosquitto mosquitto-clients ```
 
 * Set MQTT service to start on boot ``` sudo systemctl enable mosquitto.service ```
@@ -84,11 +85,13 @@ Where `proxy` is your Traefik network and `user: '472'` needs have root permissi
 You can import the dashboard: `Nnmekrc7z`
 
 ## Install and Configure InfluxDB (Docker)
+### Install
 ```
 mkdir influxdb
 chmod 777 influxdb #or at least drwxrwxr-x
 ```
 At the moment InfluxDB is setup using Docker Run, in the future docker-compose will be provided.
+### Configure
 ```
 docker run --name=influxdb --env=INFLUXDB_ADMIN_USER=<ADMIN USER NAME> --env=INDLUXDB_ADMIN_PASSWORD=<ADMIN PWD> --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --env=INFLUXDB_VERSION=1.8.3 --volume=influxdb_data:/var/lib/influxdb --volume=/var/lib/influxdb --network=grafana_default -p 8070:8086 --restart=always --runtime=runc --detach=true influxdb:1.8.3 influxd
 ```
@@ -146,7 +149,7 @@ grafana true
   * urls-port is `8070`, the same of the docker-run
   * `tagexclude ... ["db02"]` used to have multiple outputs to the same DB
 
-## Start Telegraf at boot
+### Start Telegraf at boot
 ```
 sudo systemctl unmask telegraf.service
 sudo systemctl start telegraf

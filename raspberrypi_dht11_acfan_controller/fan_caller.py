@@ -37,11 +37,11 @@ def DHT11_Fan_caller(c, stop_event):
     c.put(item)
 
     while not stop_event.wait(1):
-        #logger.debug("Wait elapsed")
+        logger.debug("Wait elapsed")
         actual = c.get()
 
         try:
-            #logger.debug("Reading DHT11")
+            logger.debug("Reading DHT11")
             humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
 
             if (temperature is not None) and (humidity is not None):
@@ -49,26 +49,26 @@ def DHT11_Fan_caller(c, stop_event):
 
                 if temperature > 20:
                     c.put(set_status(status=True, actual=actual))
-                    #logger.debug("Status ON")
+                    logger.debug("Status ON")
                 else:
                     # used only to call set_status and pass actual data
 
                     c.put(set_status(status=False, actual=actual))
-                    #logger.debug("Status OFF")
+                    logger.debug("Status OFF")
 
-                #logger.debug("Publishing MQTT")
+                logger.debug("Publishing MQTT")
                 mqtt_publisher(temp=temperature, hum=humidity)
             else:
                 c.put(item)
-                #logger.critical("Unreadable DHT11 - adding %s in queue" %item)
+                logger.critical("Unreadable DHT11 - adding %s in queue" %item)
 
         except RuntimeError as e:
-            #logger.critical(e) 
-            #logger.critical("Failed DHT11 - is it connected?") 
-            #logger.critical("Failed DHT11 - Shutting DOWN!")
+            logger.critical(e) 
+            logger.critical("Failed DHT11 - is it connected?") 
+            logger.critical("Failed DHT11 - Shutting DOWN!")
             os.kill(os.getpid(), signal.SIGTERM)
 
-        #logger.debug("Sleeping for 20 seconds")
+        logger.debug("Sleeping for 20 seconds")
         time.sleep(20)
 
     # Called when the thread is killed

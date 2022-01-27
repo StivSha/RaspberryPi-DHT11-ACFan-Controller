@@ -1,7 +1,7 @@
 import os
 import signal
 import remote.key as keys
-#import logging
+import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from datetime import datetime, timedelta
@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from relay.relay_controller import relay_off, relay_on
 
 # Setting right logger
-#logger = logging.getLogger('telegram_bot')
+logger = logging.getLogger('telegram_bot')
 
 # ""TEXT ONLY"" commands
 
@@ -18,7 +18,7 @@ from relay.relay_controller import relay_off, relay_on
 def help_command(update, context):
     '''/help, lists available commands'''
 
-    #logger.info("Called HELP")
+    logger.info("Called HELP")
     update.message.reply_text("/status \n /off \n /on <seconds  >)")
 
 
@@ -48,7 +48,7 @@ def on_command(update, context):
     turns it on for x seconds.
     Turn off time and status are put on the queue
     '''
-    #logger.info("Called ON")
+    logger.info("Called ON")
 
     # Getting on_time from user (default 20s)
 
@@ -67,7 +67,7 @@ def on_command(update, context):
 
     if dato[0] == True:
         # If it's ON -> update off time
-        #logger.debug("Updating OFF Time")
+        logger.debug("Updating OFF Time")
 
         # Updating Queue infos (turnoff time)
         dato[1] = dato[1] + timedelta(0, awake)
@@ -75,7 +75,7 @@ def on_command(update, context):
         update.message.reply_text("ON + Time added")
     else:
         # Turn ON
-        #logger.debug("Turning ON Fan")
+        logger.debug("Turning ON Fan")
 
         relay_on()
 
@@ -96,14 +96,14 @@ def off_command(update, context):
     Updates 'dato' in the queue
     '''
 
-   #logger.info("Called OFF")
+    logger.info("Called OFF")
 
     # Getting IRT data from Fifo Queue
     dato = q1.get()
     # update.message.reply_text("%s" %str(dato))
     if dato[0] == True:
         # If it's ON -> override
-        #logger.debug("Overriding OFF")
+        logger.debug("Overriding OFF")
 
         relay_off()
         update.message.reply_text("OFF")
@@ -114,7 +114,7 @@ def off_command(update, context):
 
     else:
         # It's already OFF, do nothing
-        #logger.debug("Doing nothing -> Fan is already off")
+        logger.debug("Doing nothing -> Fan is already off")
         update.message.reply_text("Is Already OFF")
 
     # Putting infos in the queue
@@ -123,7 +123,7 @@ def off_command(update, context):
 
 def status_command(update, context):
     '''Gives irt infos about fan status'''
-    #logger.info("Called Status")
+    logger.info("Called Status")
 
     # Read queue
     dato = q1.get()
@@ -141,10 +141,9 @@ def handler_message(update, context):
 
 
 def error(update, context):
-    # logger.error("Error")
-    # logger.error(update)
-    # logger.error(context.error)
-    print(1)
+    logger.error("Error")
+    logger.error(update)
+    logger.error(context.error)
 
 
 def run_bot(q):
@@ -152,7 +151,7 @@ def run_bot(q):
     When sigint or sigterm is received this script kills Telegram's Bot, logs everything and 
     sends sigusr1 to fan_caller.py
     '''
-    #logger.debug("Bot started")
+    logger.debug("Bot started")
 
     # not ideal - global variable: threads fifo queue
 
@@ -172,7 +171,7 @@ def run_bot(q):
 
     # add message handlers
     dp.add_handler(MessageHandler(Filters.text, handler_message))
-
+    
     # add error handlers
     dp.add_error_handler(error)
 
@@ -180,8 +179,8 @@ def run_bot(q):
 
     # used for a graceful shutdown
     updater.idle(stop_signals=(signal.SIGINT, signal.SIGTERM))
-    #logger.info("Shutting Down Initialized")
-    #logger.debug("Sending Signal SIGUSR1")
+    logger.info("Shutting Down Initialized")
+    logger.debug("Sending Signal SIGUSR1")
 
-    # sends sigusr1 -> fan_caller.py graceful shutdown (it has a shutdown procedure to clean GPiO)
+    # sends sigusr1 -> fan_caller.py graceful shutdown (it has a shutdown procedure to clean GPiO) 
     os.kill(os.getpid(), signal.SIGUSR1)

@@ -4,8 +4,8 @@ import os
 import queue
 import signal
 import threading
-import logging
-import logging.config
+#import logging
+#import logging.config
 
 from os import kill
 from threading import Thread
@@ -20,8 +20,8 @@ print("done!")
 
 # Logger setup
 
-logging.config.fileConfig('logging.conf')
-logger = logging.getLogger('MAIN')
+#logging.config.fileConfig('logging.conf')
+#logger = logging.getLogger('MAIN')
 
 
 
@@ -36,8 +36,8 @@ def start():
     # SIGUSR1 handler. Used to gently kill thread 1 when SIGINT or SIGTERM are called
     # SIGUSR1 is sent from bot
     def sigusr1_handler(*args):
-        logger.debug(
-            "Signal SIGUSR1 Received - Killing DHT11_Fan_caller process ")
+        #logger.debug(
+        #    "Signal SIGUSR1 Received - Killing DHT11_Fan_caller process ")
         print("signal received")
         pill2kill.set()
 
@@ -45,7 +45,7 @@ def start():
         t1.join()
 
         # kill the rest of the program
-        logger.debug("Killing main module")
+        #logger.debug("Killing main module")
         kill(os.getpid(), signal.SIGTERM)
 
     signal.signal(signal.SIGUSR1, sigusr1_handler)
@@ -58,5 +58,5 @@ def start():
     run_bot(q)
 
 if __name__ == '__main__':
-    logger.debug("__name__ == __main__ STARTING program")
+    #logger.debug("__name__ == __main__ STARTING program")
     start()

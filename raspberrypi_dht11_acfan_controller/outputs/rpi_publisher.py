@@ -3,18 +3,21 @@ import logging
 import logging.config
 import paho.mqtt.publish as publish
 
-
 # Setting right logger
-
 logger = logging.getLogger('rpi_publisher')
 
-
-# Publishing and Logging MQTT
 # Database used is InfluxDB: timestamp isn't needed
-# Publishing format is in JSON 
+# Publishing format: JSON
 
 def mqtt_publisher(temp, hum):
-    
+    '''
+    Publishes data via MQTT, in localhost on port 1883.
+    temp = temperature value, hum = humidity value
+    these 2 data will be pubished via MQTT in JSON.
+    json_dump dumps these data as JSON.
+    Publishing successes/errors are logged. 
+    '''
+
     try:
         data_set = {"temperature": temp, "humidity": hum}
         json_dump = json.dumps(data_set)
@@ -28,9 +31,10 @@ def mqtt_publisher(temp, hum):
         logger.error(e)
 
 
-# Here for testing purpose
-# mqtt_publisher(1,2)
-
 if __name__ == '__main__':
-    mqtt_publisher(1,2)
+    '''
+    used for testing purposes, publishes 1,2 on mqtt_publisher defaults
+    '''
+
+    mqtt_publisher(1, 2)
     print("MQTT CLIENT should print 1,2 with topic = 'TempHumSens'")

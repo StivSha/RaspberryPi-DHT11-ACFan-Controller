@@ -28,9 +28,13 @@ logger = logging.getLogger('MAIN')
 # ""MAIN""
 
 def start():
+    '''
+    start program function. pretty easy, creates thread 1 with fan_caller and thread 2 with bot. Has a sigusr1 signal handler to "send" a flag to fan_caller when to
+    stop. 
+    '''
+    
     # SIGUSR1 handler. Used to gently kill thread 1 when SIGINT or SIGTERM are called
     # SIGUSR1 is sent from bot
-    print("starting")
     def sigusr1_handler(*args):
         logger.debug(
             "Signal SIGUSR1 Received - Killing DHT11_Fan_caller process ")

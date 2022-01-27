@@ -15,6 +15,9 @@ logger = logging.getLogger('fan_auto')
 
 
 def turn_on(awake_time):
+    '''turn on fan for awake_time seconds.
+    Returns datetime.now() + timedelta(0, awake_time'''
+
     logger.debug("Turning ON fan")
     relay_on()
 
@@ -22,6 +25,9 @@ def turn_on(awake_time):
 
 
 def turn_off():
+    '''turn off fan 
+    Returns datetime.fromtimestamp(0)'''
+
     logger.debug("Turning OFF fan")
     relay_off()
 
@@ -29,9 +35,12 @@ def turn_off():
 
 
 def set_status(status, actual, awake_time=8):
-    logger.debug("called set_status")
-    # Check actual[0] is boolean
+    '''calculates fan status if it's on and should be turned on or off, and if it's off and can be turned on or should stay off.
+    It can be improved.'''
 
+    logger.debug("called set_status")
+    
+    # Check actual[0] is boolean
     if type(actual[0]) is not bool:
         logger.critical("actual[0] not Boolean")
         logger.critical("Exiting")
@@ -40,7 +49,6 @@ def set_status(status, actual, awake_time=8):
         os.kill(os.getpid(), signal.SIGTERM)
 
     # if shutdown time has elapsed and fan is still ON
-
     if (actual[1] < datetime.now()) & (actual[0] == True):
         # TURN OFF
         logger.info("time elapsed, turning off")
@@ -60,6 +68,8 @@ def set_status(status, actual, awake_time=8):
 
 
 '''
+TESTING AREA - DO NOT REMOVE ATM
+
 attuale = [False, datetime.fromtimestamp(0)]
 print("Test 1 - PASSEd")
 print(" 1")

@@ -70,7 +70,7 @@ def on_command(update, context):
         dato[0] = True
         dato[1] = datetime.now() + timedelta(0, awake)
         update.message.reply_text("Turned ON")
-
+    print(dato)
     q1.put(dato)
 
 # ""OFF OVERRIDE"" Command
@@ -140,6 +140,10 @@ def run_bot(q):
     dp.add_error_handler(error)
 
     updater.start_polling(0)  # checking user inputs(time)
+    # print("bot ready")
+    # Idling BOT
+    # used for gentle shutdown procedure
+    # updater.idle()
 
     updater.idle(stop_signals=(signal.SIGINT, signal.SIGTERM))
     logger.info("Shutting Down Initialized")

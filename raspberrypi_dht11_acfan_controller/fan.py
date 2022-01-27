@@ -29,7 +29,7 @@ def turn_off():
 
 
 def set_status(status, actual, awake_time=8):
-
+    logger.debug("called set_status")
     # Check actual[0] is boolean
 
     if type(actual[0]) is not bool:
@@ -57,3 +57,33 @@ def set_status(status, actual, awake_time=8):
     # returning updated status and off time
 
     return [status, actual[1]]
+
+
+'''
+attuale = [False, datetime.fromtimestamp(0)]
+print("Test 1 - PASSEd")
+print(" 1")
+attuale = set_status(status = True, actual=attuale,  awake_time=1)
+time.sleep(5)
+print(" 2")
+attuale = set_status(status = True, actual=attuale)
+time.sleep(6)
+print(" 3")
+attuale = set_status(status = True, actual=attuale)
+'''
+'''
+print("Test 2")
+print("1    " + str(datetime.now()))
+set_status(status = False)
+time.sleep(2)
+print("2    " + str(datetime.now()))
+set_status(status = True)
+print("3    " + str(datetime.now()))
+set_status(status = False)
+time.sleep(1)
+print("4    " + str(datetime.now()))
+set_status(status = True)
+time.sleep(9)
+print("5    " + str(datetime.now()))
+set_status(status = False)
+'''

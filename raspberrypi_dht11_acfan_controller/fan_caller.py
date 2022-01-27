@@ -31,23 +31,24 @@ def DHT11_Fan_caller(c, stop_event):
     c.put(item)
     counter = 0
 
-    # print("DHT11 ready")
+    print("DHT11 ready")
     while not stop_event.wait(1):
         logger.debug("Wait elapsed")
         actual = c.get()
 
-        with c.mutex:
-            logger.debug("queue cleared")
-            c.queue.clear()
+        #with c.mutex:
+        #    logger.debug("queue cleared")
+        #    c.queue.clear()
 
         try:
             logger.debug("Reading DHT11")
             humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
+     #       print("humidity: %s, temperature: %s" %(humidity,temperature))
 
-            if (temperature is float) and (humidity is float):
+            if (temperature is not None) and (humidity is not None):
                 # Reads Temperature and Humidity
 
-                if temperature > 25:
+                if temperature > 20:
                     c.put(set_status(status=True, actual=actual))
                     logger.debug("Status ON")
                 else:
@@ -60,27 +61,32 @@ def DHT11_Fan_caller(c, stop_event):
                 mqtt_publisher(temp=temperature, hum=humidity)
                 counter = 0
             else:
-                logger.debug("Unreadable DHT11")
+                c.put(item)
+                logger.critical("Unreadable DHT11 - adding %s in queue" %item)
 
         except RuntimeError as e:
             # As DHT11 sensors are not reliable, this is needed. If data is not read for more than 10 times in a row, program gets shut down
-            logger.critical(e)
-            logger.critical("Failed to read DHT11")
+            #logger.critical(e)
+            #logger.critical("Failed to read DHT11")
+            #continue
 
-            continue
-
-        except Error as e:
-            # Manage "not connected error"
-            # Killing for safety: board could be shorted
-
-            logger.critical(e)
-            logger.critical("Failed DHT11 - is it connected?")
+            logger.critical(e) 
+            logger.critical("Failed DHT11 - is it connected?") 
             logger.critical("Failed DHT11 - Shutting DOWN!")
             os.kill(os.getpid(), signal.SIGTERM)
 
-        # print("autostuff sleeping for 20 secs")
-        logger.debug("Sleeping for 180 seconds")
-        time.sleep(180)
+        #except Error as e:
+        #    # Manage "not connected error"
+        #    # Killing for safety: board could be shorted
+
+        #    logger.critical(e)
+        #    logger.critical("Failed DHT11 - is it connected?")
+        #    logger.critical("Failed DHT11 - Shutting DOWN!")
+        #    os.kill(os.getpid(), signal.SIGTERM)
+
+      #  print("autostuff sleeping for 20 secs")
+        logger.debug("Sleeping for 20 seconds")
+        time.sleep(20)
 
     # Called when the thread is killed
     # Clears Fifo Queue

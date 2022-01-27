@@ -28,6 +28,9 @@ def mqtt_publisher(temp, hum):
         logger.error(e)
 
 
+# Here for testing purpose
+# mqtt_publisher(1,2)
+
 if __name__ == '__main__':
     mqtt_publisher(1,2)
     print("MQTT CLIENT should print 1,2 with topic = 'TempHumSens'")

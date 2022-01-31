@@ -157,15 +157,10 @@ sudo systemctl enable telegraf.service
 ```
 
 ## Run RaspberryPi-DHT11-ACFan-Controller
-//To run the program in the background:  
-//`nohup python3 raspberrypi_dht11_acfan_controller/raspberrypi_dht11_acfan_controller.py`
-
-Run RaspberryPi-DHT11-ACFan-Controller at system-boot. Precisely after home mount  
 ```
-TODO: NEEDS TO BE TESTED
-crontab -e
-@reboot /path/to/RaspberryPi-DHT11-ACFan-Controller.py
+tmux
+python3 raspberrypi_dht11_acfan_controller/raspberrypi_dht11_acfan_controller.py`
 ```
+**CTRL+D**
+for more info check tmux docs.
 
-To find its PID:  
-`ps ax | grep raspberrypi_dht11_acfan_controller.py`  

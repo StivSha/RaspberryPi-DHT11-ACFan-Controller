@@ -35,8 +35,7 @@ def turn_off():
 
 
 def set_status(status, actual, awake_time=8):
-    '''calculates fan status if it's on and should be turned on or off, and if it's off and can be turned on or should stay off.
-    It can be improved.'''
+    '''calculates fan status if it's on and should be turned on or off, and if it's off and can be turned on or should stay off.'''
 
     logger.debug("called set_status")
     
